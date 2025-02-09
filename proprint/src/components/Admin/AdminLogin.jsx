@@ -1,12 +1,32 @@
 import React from "react";
 import assets from "../../assets/images/assets";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { useForm } from 'react-hook-form'
+import { AdminLogin as handleAdminLogin } from "../../utilities/Api";
+import { useToast } from "../../context/Loaders/ToastContext";
 
 const AdminLogin = () => {
     const [showPassword, setShowPassword] = React.useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { notifySuccess, notifyError, waitingLoader, startWaitingLoader, stopWaitingLoader } = useToast();
+    
+    const onSubmit = async (data) => {
+        startWaitingLoader()
+        try{
+            const response = await handleAdminLogin(data.username, data.password);
+            console.log(response.data);
+            notifySuccess(response.data.responseMessage);
+            stopWaitingLoader()
+        }catch(error){
+            console.error(error);
+            notifyError(error.response.data.responseMessage)
+            stopWaitingLoader()
+        }
+      };
     
   return (
     <div className="w-full h-screen md:flex lg:bg-gray-900 lg:bg-opacity-50 md:items-center md:justify-center relative">
+        <waitingLoader/>
       <div className="relative lg:flex w-[100%] md:h-[500px] max-w-4xl bg-white lg:shadow-lg rounded-lg overflow-hidden">
         {/* Login Form */}
         <div className="w-full lg:w-1/2 mt-10 md:mt-0 p-8">
@@ -17,17 +37,22 @@ const AdminLogin = () => {
             Sign in to manage orders and customer requests efficiently. Secure
             access Only for Authorized personnel.
           </p>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold mb-2">
-                Email
+                Username
               </label>
               <input
-                type="email"
+                type="text"
                 className="w-full px-4 py-2 border rounded-md outline-none"
-                placeholder="Enter your email"
+                placeholder="Enter your username"
+                required
+                {...register("username", { required: "Username is required" })}
               />
             </div>
+            {errors.username && (
+              <p className="text-red-500">{errors.username.message}</p>
+            )}
             <div className="mb-4 relative">
               <label className="block text-gray-700 font-semibold mb-2">
                 Password
@@ -37,6 +62,9 @@ const AdminLogin = () => {
                   type={showPassword ? "text" : "password"}
                   className="w-full px-4 py-2 border rounded-md outline-none pr-10"
                   placeholder="Enter your password"
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
                 />
                 <button
                   type="button"
@@ -50,6 +78,9 @@ const AdminLogin = () => {
                 </button>
               </div>
             </div>
+            {errors.password && (
+              <p className="text-red-500">{errors.password.message}</p>
+            )}
 
             <div className="mb-4 flex justify-between">
               <div className="flex items-center mb-4 gap-2">
@@ -67,17 +98,21 @@ const AdminLogin = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 text-white mt-4 py-2 rounded-md hover:bg-blue-600 transition">
-              Login
+              {waitingLoader ? "Loading..." : "Login"}
             </button>
           </form>
         </div>
 
-        <div className="hidden lg:block w-1/2 flex items-center justify-center relative h-full bg-cover bg-no-repeat"
-        style={{
-          backgroundImage: `url(${assets.banner})`,
-        }}
-        >
-            <img src={assets.animation} className="w-36 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" alt="" />
+        <div
+          className="hidden lg:block w-1/2 flex items-center justify-center relative h-full bg-cover bg-no-repeat"
+          style={{
+            backgroundImage: `url(${assets.banner})`,
+          }}>
+          <img
+            src={assets.animation}
+            className="w-36 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            alt=""
+          />
         </div>
       </div>
     </div>
