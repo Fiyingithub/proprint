@@ -1,8 +1,14 @@
 import React from 'react'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import AdminLogin from './components/Admin/AdminLogin'
 
 const App = () => {
   return (
-    <div className='text-4xl text-red-500 '>App</div>
+    <BrowserRouter>
+    <Routes>
+      <Route path="/adminlogin" element={<AdminLogin />} />
+    </Routes>
+    </BrowserRouter>
   )
 }
 
