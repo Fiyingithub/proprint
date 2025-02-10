@@ -1,6 +1,6 @@
 import React from 'react';
 import { useToast } from './ToastContext';
-import '../Style/loader.css'
+import '../../Style/loader.css'
 
 function WaitingLoader() {
   const { waitingLoader } = useToast()

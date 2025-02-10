@@ -10,7 +10,7 @@ export const AdminLogin = async (username, password) => {
     });
     return response;
   } catch (error) {
-    console.error("Login failed:", error.response?.data || error.message);
+    console.error("Login failed:",error.message);
     throw error; 
   }
 };

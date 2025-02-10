@@ -1,10 +1,10 @@
 import React from 'react';
-// import { useToast } from './ToastContext';
-import '../Style/spinnerLoader.css'
+import { useToast } from './ToastContext';
+import "../../Style/spinnerLoader.css";
 
 const SpinnerLoader = () => {
-  // const { waitingLoader } = useToast()
-  // if (!waitingLoader) return null;  
+  const { spinnerLoader } = useToast();
+  if (!spinnerLoader) return null;
   return (
     <div className='spinner-loader'>
     </div>
