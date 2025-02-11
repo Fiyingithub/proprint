@@ -35,16 +35,9 @@ const Clients = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [trigger, setTrigger] = useState(false);
 
-  function countElements(arr) {
-    let count = 0;
-    for (let i = 0; i < arr.length; i++) {
-      count++;
-    }
-    return count;
-  }
 
   useEffect(() => {
-    const fetchMembers = async () => {
+    const fetchClient = async () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
@@ -63,7 +56,7 @@ const Clients = () => {
         setIsLoading(false);
       }
     };
-    fetchMembers();
+    fetchClient();
   }, [trigger]);
 
   const [openEditMenu, setOpenEditMenu] = useState(false);
@@ -78,7 +71,7 @@ const Clients = () => {
     navigate(`/admin/client/${id}`, { state: id });
   };
 
-  const findMemberByName = (clients, searchQuery) => {
+  const findClientByName = (clients, searchQuery) => {
     if (!searchQuery) return;
     const lowerCaseQuery = searchQuery.toLowerCase();
 
@@ -88,7 +81,7 @@ const Clients = () => {
     return result || null;
   };
 
-  const [addMemberModal, setAddMemberModal] = useState(false);
+  const [addClientModal, setAddClientModal] = useState(false);
   const [clientData, setClientData] = useState({
     clientName: "",
     businessName: "",
@@ -108,7 +101,7 @@ const Clients = () => {
       notifySuccess(res.responseMessage);
       console.log(res);
       stopWaitingLoader();
-      setAddMemberModal(false);
+      setAddClientModal(false);
       setTrigger(true);
     } catch (error) {
       console.error(error);
@@ -117,7 +110,7 @@ const Clients = () => {
     }
   };
 
-  const [clientsPerPage] = useState(5);
+  const [clientsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
   const iLastClient = currentPage * clientsPerPage;
@@ -148,8 +141,8 @@ const Clients = () => {
             <div className="gap-2 flex items-center flex-col md:flex-row md:justify-between ">
               <button
                 className="bg-gray-800 text-white hover:bg-gray-800/85 transition-all duration-300 px-4 py-2 rounded mr-2"
-                onClick={() => setAddMemberModal(true)}>
-                Add Member
+                onClick={() => setAddClientModal(true)}>
+                Add Clients
               </button>
               <div className="flex flex-col md:flex-row gap-2">
                 <input
@@ -210,7 +203,7 @@ const Clients = () => {
               {(() => {
                 // Decide which dataset to display: foundMembers or all clients
                 const filteredMembers = searchQuery
-                  ? findMemberByName(clients, searchQuery) || []
+                  ? findClientByName(clients, searchQuery) || []
                   : currentClient;
 
                 return filteredMembers && filteredMembers.length > 0 ? (
@@ -278,13 +271,13 @@ const Clients = () => {
         </div>
       </div>
 
-      {addMemberModal && (
+      {addClientModal && (
         <div>
           <div className="fixed inset-0 z-30 flex items-center justify-center p-4 lg:overflow-y-auto lg:px-[10%] bg-black bg-opacity-50">
             <div className="bg-white lg:mt-40 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full relative">
               <IoMdCloseCircle
                 className="absolute top-4 right-4 text-3xl text-primary cursor-pointer"
-                onClick={() => setAddMemberModal(false)}
+                onClick={() => setAddClientModal(false)}
               />
               <h2 className="text-lg font-bold text-gray-600 mb-4">
                 Add New Clients
@@ -379,7 +372,7 @@ const Clients = () => {
                 <button
                   type="submit"
                   className="px-4 py-2 bg-gray-800 rounded lg text-white">
-                  Add CLient
+                  Add Client
                 </button>
               </form>
             </div>
