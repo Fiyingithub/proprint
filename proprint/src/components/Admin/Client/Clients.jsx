@@ -151,11 +151,11 @@ const Clients = () => {
                 onClick={() => setAddMemberModal(true)}>
                 Add Member
               </button>
-              <div className="flex gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <input
                   type="text"
                   placeholder="Search Client By Name"
-                  className="border border-gray-300 focus:border-primary outline-none rounded-md px-4 py-2 lg:w-[350px]"
+                  className="border border-gray-300 focus:border-primary outline-none rounded-md px-4 py-2 w-full lg:w-[350px]"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
