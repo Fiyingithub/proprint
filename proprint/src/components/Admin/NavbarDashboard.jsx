@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const NavbarDashboard = () => {
   const location = useLocation();
-  console.log(location);
   const navItems = [
     { name: "Dashboard", navigationLink: "/admin/dashboard" },
     { name: "Clients", navigationLink: "/admin/clients" },

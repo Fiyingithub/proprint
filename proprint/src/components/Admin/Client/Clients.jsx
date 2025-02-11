@@ -1,37 +1,39 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import ProgressChart from "../DashboardComponents/ProgressChart";
 import StudentOverview from "../DashboardComponents/StudentOverview";
 import NavbarDashboard from "../NavbarDashboard";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useToast } from '../../../context/Loaders/ToastContext';
-import SpinnerLoader from '../../../context/Loaders/SpinnerLoader';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useToast } from "../../../context/Loaders/ToastContext";
+import SpinnerLoader from "../../../context/Loaders/SpinnerLoader";
 
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
 const Clients = () => {
-  const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } = useToast();
+  const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } =
+    useToast();
   const navigate = useNavigate();
   const menuRef = useRef(null);
+  console.log("MENUREF", menuRef);
   const handleClickOutside = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
       setOpenEditMenu(false);
     }
-  }
+  };
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-    }
+    };
   }, []);
 
-  const [members, setMembers] = useState([]);
+  const [clients, setClients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [message, setMessage] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [trigger, setTrigger] = useState(false)
+  const [message, setMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [trigger, setTrigger] = useState(false);
 
   function countElements(arr) {
     let count = 0;
@@ -43,83 +45,87 @@ const Clients = () => {
 
   useEffect(() => {
     const fetchMembers = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await axios.get('https://api.tranquility.org.ng/api/Member/GetAllMember');
-        setMembers(response.data.$values);
-        setIsLoading(false)
+        const response = await axios.get(
+          "https://proprints.tranquility.org.ng/api/Client/GetAllClients"
+        );
+        setClients(response.data.$values);
+        console.log(response.data.$values);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
         if (error.response) {
-          setMessage(error.response.data.responseMessage)
+          setMessage(error.response.data.responseMessage);
         } else {
-          setMessage(`${error.message}, check your internet connection`)
+          setMessage(`${error.message}, check your internet connection`);
         }
         setIsLoading(false);
       }
-    }
+    };
     fetchMembers();
   }, [trigger]);
 
   const [openEditMenu, setOpenEditMenu] = useState(false);
-  const [memberId, setMemberId] = useState(null);
+  const [clientId, setClientId] = useState(null);
 
   const toggleEditMenu = (item) => {
     setOpenEditMenu(!openEditMenu);
-    setMemberId(item);
+    setClientId(item);
   };
 
   const handleView = (id) => {
-    navigate(`/admin/member/${id}`, { state: id });
+    navigate(`/admin/client/${id}`, { state: id });
   };
 
-  const findMemberByName = (members, searchQuery) => {
+  const findMemberByName = (clients, searchQuery) => {
     if (!searchQuery) return;
     const lowerCaseQuery = searchQuery.toLowerCase();
 
-    const result = members.filter(member => member.lastname.toLowerCase().includes(lowerCaseQuery));
+    const result = clients.filter((client) =>
+      client.clientName.toLowerCase().includes(lowerCaseQuery)
+    );
     return result || null;
-  }
+  };
 
   const [addMemberModal, setAddMemberModal] = useState(false);
-  const [existingMemberData, setExistingMemberData] = useState({
-    firstname: '',
-    lastname: '',
-    othername: '',
-    staffId: '',
-    zeroIdId: '',
-    contactAddress: '',
-    phone: '',
-    email: '',
-    department: '',
-    campusLocation: ''
-  })
+  const [clientData, setClientData] = useState({
+    clientName: "",
+    businessName: "",
+    businessAddress: "",
+    email: "",
+    phone: "",
+  });
   const addExistingMember = async (e) => {
     e.preventDefault();
     startWaitingLoader();
 
     try {
-      const res = await axios.post('https://api.tranquility.org.ng/api/Member/AddExistingMember', existingMemberData);
-      notifySuccess(res.data.responseMessage);
+      const res = await axios.post(
+        "https://proprints.tranquility.org.ng/api/Client/CreateClient",
+        clientData
+      );
+      notifySuccess(res.responseMessage);
+      console.log(res);
       stopWaitingLoader();
       setAddMemberModal(false);
-      setTrigger(true)
+      setTrigger(true);
     } catch (error) {
       console.error(error);
-      notifyError(error.response.data.responseMessage || 'An error occurred');
+      notifyError(error.response.data.responseMessage || "An error occurred");
       stopWaitingLoader();
     }
-  }
+  };
 
-  const [membersPerPage] = useState(10);
+  const [clientsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const iLastMember = currentPage * membersPerPage;
-  const iFirstMember = iLastMember - membersPerPage;
-  const currentMembers = members.slice(iFirstMember, iLastMember);
+  const iLastClient = currentPage * clientsPerPage;
+  const iFirstClient = iLastClient - clientsPerPage;
+  const currentClient = clients.slice(iFirstClient, iLastClient);
 
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(members.length / membersPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(clients.length / clientsPerPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -136,45 +142,51 @@ const Clients = () => {
       </div>
 
       <div className="container mb-10 mx-auto p-2">
-        <div className=''>
+        <div className="">
           <div className="flex flex-col lg:flex-row justify-between lg:items-center mb-4">
-            <h2 className="text-2xl font-medium mb-4 text-start">
-              All Members
-            </h2>
+            <h2 className="text-2xl font-medium mb-4 text-start">Clients</h2>
             <div className="gap-2 flex items-center flex-col md:flex-row md:justify-between ">
               <button
-                className="bg-primary text-white hover:bg-[#63A0F0] transition-all duration-300 px-4 py-2 rounded mr-2"
-                onClick={() => setAddMemberModal(true)}
-              >
+                className="bg-gray-800 text-white hover:bg-gray-800/85 transition-all duration-300 px-4 py-2 rounded mr-2"
+                onClick={() => setAddMemberModal(true)}>
                 Add Member
               </button>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="Search Members"
+                  placeholder="Search Client By Name"
                   className="border border-gray-300 focus:border-primary outline-none rounded-md px-4 py-2 lg:w-[350px]"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button className="bg-grey-800 text-white hover:bg-[#63A0F0] transition-all duration-300 px-4 py-2 rounded">
+                <button className="bg-gray-800 text-white hover:bg-gray-800/85 transition-all duration-300 px-4 py-2 rounded">
                   Search
                 </button>
 
-                <div className='flex items-center bg-primary py-2 px-4 text-white gap-2'>
+                <div className="flex items-center bg-gray-800 py-2 px-4 text-white gap-2">
                   <button
                     onClick={() => setCurrentPage(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`${currentPage === 1 ? 'opacity-20' : 'opacity-100'}`}
-                  ><FaAngleLeft className='text-2xl' /></button>
-                  <span className='font-medium'>page {currentPage} of {pageNumbers.length}</span>
+                    className={`${
+                      currentPage === 1 ? "opacity-20" : "opacity-100"
+                    }`}>
+                    <FaAngleLeft className="text-2xl" />
+                  </button>
+                  <span className="font-medium">
+                    page {currentPage} of {pageNumbers.length}
+                  </span>
                   <button
                     onClick={() => setCurrentPage(currentPage + 1)}
                     disabled={currentPage === pageNumbers.length}
-                    className={`${currentPage === pageNumbers.length ? 'opacity-20' : 'opacity-100'}`}
-                  ><FaAngleRight className='text-2xl' /></button>
+                    className={`${
+                      currentPage === pageNumbers.length
+                        ? "opacity-20"
+                        : "opacity-100"
+                    }`}>
+                    <FaAngleRight className="text-2xl" />
+                  </button>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -182,65 +194,55 @@ const Clients = () => {
         <div className="overflow-x-auto p-1 pb-24">
           <table className="min-w-full table-auto  rounded-lg shadow-md">
             <thead>
-              <tr className="bg-gradient-to-r from-blue-500 to-purple-400 text-white rounded-t-lg">
-                <th className="px-4 py-4 text-left">Member Name</th>
+              <tr className="bg-gradient-to-r from-gray-800 to-gray-800/80 text-white rounded-t-lg">
+                <th className="px-4 py-4 text-left">S/N</th>
+                <th className="px-2 py-4 text-left">Client Name</th>
+                <th className="px-2 py-4 text-left">Business Name</th>
+                <th className="px-2 py-4 text-left">Business Address</th>
                 <th className="px-2 py-4 text-left">Email</th>
-                <th className="px-2 py-4 text-left">ZeroId</th>
                 <th className="px-2 py-4 text-left">Phone</th>
-                <th className="px-2 py-4 text-left">Campus Location</th>
-                <th className="px-2 py-4 text-left">Department</th>
+                {/* <th className="px-2 py-4 text-left">Orders</th> */}
+                {/* <th className="px-2 py-4 text-left">Payments</th> */}
                 <th className="px-2 py-4 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
               {(() => {
-                // Decide which dataset to display: foundMembers or all members
+                // Decide which dataset to display: foundMembers or all clients
                 const filteredMembers = searchQuery
-                  ? findMemberByName(members, searchQuery) || []
-                  : currentMembers;
+                  ? findMemberByName(clients, searchQuery) || []
+                  : currentClient;
 
                 return filteredMembers && filteredMembers.length > 0 ? (
-                  filteredMembers.map((member, index) => (
+                  filteredMembers.map((client, index) => (
                     <tr
-                      key={member.memberId}
-                      className={`${index % 2 === 0 ? "bg-blue-50" : "bg-green-50"
-                        } hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 border-b text-sm text-gray-700 transition-colors`}
-                    >
-                      <td className="flex items-center gap-2 px-4 py-2">
-                        <img
-                          src={
-                            member.imageUrl !== null
-                              ? member.imageUrl
-                              : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                          }
-                          alt=""
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <div>
-                          <h3 className="font-medium">
-                            {member.firstname} {member.lastname}
-                          </h3>
-                        </div>
-                      </td>
-                      <td className="px-2 py-2">{member.email}</td>
-                      <td className="px-2 py-2">{member.zeroId}</td>
-                      <td className="px-2 py-2">{member.phone}</td>
+                      key={index}
+                      className={`${
+                        index % 2 === 0 ? "bg-blue-50" : "bg-green-50"
+                      } hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 border-b text-sm text-gray-700 transition-colors`}>
+                      <td className="px-4 py-2">{index + 1}</td>
+                      <td className=" px-4 py-2">{client.clientName}</td>
+                      <td className="px-2 py-2">{client.businessName}</td>
+                      <td className="px-2 py-2">{client.businessAddress}</td>
+                      <td className="px-2 py-2">{client.email}</td>
                       <td className="px-2 py-2 whitespace-wrap">
-                        {member.contactAddress}
+                        {client.phone}
                       </td>
-                      <td className="px-2 py-2">{member.department}</td>
+                      {/* <td className="px-2 py-2">{client.orders === null ? 0 : client.orders}</td> */}
+                      {/* <td className="px-2 py-2">{client.payments === null ? 0 : client.payments}</td> */}
                       <td className="px-4 py-2">
                         <div className="relative">
                           <HiOutlineDotsHorizontal
                             className="text-[25px] text-gray-500 cursor-pointer transition-transform transform hover:scale-110"
-                            onClick={() => toggleEditMenu(member.memberId)}
+                            onClick={() => toggleEditMenu(client.clientId)}
                           />
-                          {memberId === member.memberId && openEditMenu ? (
-                            <div ref={menuRef} className="shadow-lg px-2 py-4 rounded-lg border absolute right-8 top-4 bg-white text-[14px] text-left grid gap-4 w-[150px] z-50">
+                          {clientId === client.clientId && openEditMenu ? (
+                            <div
+                              ref={menuRef}
+                              className="shadow-lg px-2 py-4 rounded-lg border absolute right-8 top-4 bg-white text-[14px] text-left grid gap-4 w-[150px] z-50">
                               <p
                                 className="cursor-pointer hover:bg-blue-500 hover:text-white py-1 px-2 rounded transition-colors"
-                                onClick={() => handleView(member.memberId)}
-                              >
+                                onClick={() => handleView(client.clientId)}>
                                 View
                               </p>
                               <p className="cursor-pointer hover:bg-green-500 hover:text-white py-1 px-2 rounded transition-colors">
@@ -259,13 +261,12 @@ const Clients = () => {
                   <tr>
                     <td
                       colSpan="6"
-                      className="px-4 py-2 text-center text-gray-500 whitespace-nowrap h-40"
-                    >
+                      className="px-4 py-2 text-center text-gray-500 whitespace-nowrap h-40">
                       <div className="flex justify-center">
                         {isLoading ? (
                           <SpinnerLoader />
                         ) : (
-                          "No members found" || message
+                          "No clients found" || message
                         )}
                       </div>
                     </td>
@@ -286,26 +287,25 @@ const Clients = () => {
                 onClick={() => setAddMemberModal(false)}
               />
               <h2 className="text-lg font-bold text-gray-600 mb-4">
-                Add Existing Member
+                Add New Clients
               </h2>
               <form
                 action="submit"
                 onSubmit={addExistingMember}
-                className="w-[100%] space-y-4"
-              >
-                <div className='grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+                className="w-[100%] space-y-4">
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   <div className="">
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="firstname"
-                      name="firstname"
+                      id="clientName"
+                      name="clientName"
                       required
-                      placeholder="Member's first name"
+                      placeholder="Client's fullname"
                       onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          firstname: e.target.value,
+                        setClientData({
+                          ...clientData,
+                          clientName: e.target.value,
                         })
                       }
                     />
@@ -314,14 +314,14 @@ const Clients = () => {
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="lastname"
-                      name="lastname"
+                      id="Business Name"
+                      name="Business Name"
                       required
-                      placeholder="Member's last name"
+                      placeholder="Business name"
                       onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          lastname: e.target.value,
+                        setClientData({
+                          ...clientData,
+                          businessName: e.target.value,
                         })
                       }
                     />
@@ -330,93 +330,29 @@ const Clients = () => {
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="othername"
-                      name="othername"
+                      id="businessAddress"
+                      name="businessAddress"
                       required
-                      placeholder="Member's other name"
+                      placeholder="Business address"
                       onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          othername: e.target.value,
+                        setClientData({
+                          ...clientData,
+                          businessAddress: e.target.value,
                         })
                       }
                     />
                   </div>
                   <div className="">
                     <input
-                      type="text"
-                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="staffId"
-                      name="staffId"
-                      required
-                      placeholder="Member's staff Id"
-                      onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          staffId: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      type="text"
-                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="zeroId"
-                      name="zeroId"
-                      required
-                      placeholder="Member's Zero Id"
-                      onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          zeroId: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      type="text"
-                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="contactAddress"
-                      name="contactAddress"
-                      required
-                      placeholder="Member's contact address"
-                      onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          contactAddress: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      type="text"
-                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="phone"
-                      name="phone"
-                      required
-                      placeholder="Member's phone number"
-                      onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          phone: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      type="text"
+                      type="email"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
                       id="email"
                       name="email"
                       required
-                      placeholder="Member's email address"
+                      placeholder="Email Address"
                       onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
+                        setClientData({
+                          ...clientData,
                           email: e.target.value,
                         })
                       }
@@ -426,30 +362,14 @@ const Clients = () => {
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="department"
-                      name="department"
+                      id="PhoneNumber"
+                      name="PhoneNumber"
                       required
-                      placeholder="Member's department"
+                      placeholder="Phone number"
                       onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          department: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      type="text"
-                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="campusLocation"
-                      name="campusLocation"
-                      required
-                      placeholder="Member's campus location"
-                      onChange={(e) =>
-                        setExistingMemberData({
-                          ...existingMemberData,
-                          campusLocation: e.target.value,
+                        setClientData({
+                          ...clientData,
+                          phone: e.target.value,
                         })
                       }
                     />
@@ -458,9 +378,8 @@ const Clients = () => {
 
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-primary rounded lg text-white"
-                >
-                  Add Member
+                  className="px-4 py-2 bg-gray-800 rounded lg text-white">
+                  Add CLient
                 </button>
               </form>
             </div>
@@ -469,6 +388,6 @@ const Clients = () => {
       )}
     </div>
   );
-}
+};
 
-export default Clients
+export default Clients;
