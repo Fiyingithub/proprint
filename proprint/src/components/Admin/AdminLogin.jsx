@@ -15,7 +15,8 @@ const AdminLogin = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } = useToast();
+  const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } =
+    useToast();
 
   const onSubmit = async (data) => {
     startWaitingLoader();
@@ -24,8 +25,10 @@ const AdminLogin = () => {
       const response = await handleAdminLogin(data.username, data.password);
       console.log(response.data);
       notifySuccess(response.data.responseMessage);
-      navigate("/admin/dashboard")
-
+      if (response.data.responseMessage === "Admin Logged in Successfully") {
+        navigate("/admin/dashboard");
+        localStorage.setItem("adminId", JSON.stringify(response.data.data.adminId));
+      }
     } catch (error) {
       console.error(error);
       notifyError(error.response.data.responseMessage);

@@ -11,7 +11,7 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 
-const Clients = () => {
+const Orders = () => {
   const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } =
     useToast();
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Clients = () => {
     };
   }, []);
 
-  const [clients, setClients] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,9 +40,9 @@ const Clients = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          "https://proprints.tranquility.org.ng/api/Client/GetAllClients"
+          "https://proprints.tranquility.org.ng/api/Order/GetAllOrders"
         );
-        setClients(response.data.$values);
+        setOrders(response.data.$values);
         console.log(response.data.$values);
         setIsLoading(false);
       } catch (error) {
@@ -59,34 +59,34 @@ const Clients = () => {
   }, [trigger]);
 
   const [openEditMenu, setOpenEditMenu] = useState(false);
-  const [clientId, setClientId] = useState(null);
+  const [orderId, setOrderId] = useState(null);
 
   const toggleEditMenu = (item) => {
     setOpenEditMenu(!openEditMenu);
-    setClientId(item);
+    setOrderId(item);
   };
 
   const handleView = (id) => {
     navigate(`/admin/client/${id}`, { state: id });
   };
 
-  const findClientByName = (clients, searchQuery) => {
+  const findClientByName = (orders, searchQuery) => {
     if (!searchQuery) return;
     const lowerCaseQuery = searchQuery.toLowerCase();
 
-    const result = clients.filter((client) =>
+    const result = orders.filter((client) =>
       client.clientName.toLowerCase().includes(lowerCaseQuery)
     );
     return result || null;
   };
 
-  const [addClientModal, setAddClientModal] = useState(false);
+  const [createOrderModal, setCreateOrderModal] = useState(false);
   const [clientData, setClientData] = useState({
     clientName: "",
     businessName: "",
-    businessAddress: "",
-    email: "",
-    phone: "",
+    address: "",
+    orderDate: "",
+    clientId: "",
   });
   const addExistingMember = async (e) => {
     e.preventDefault();
@@ -94,13 +94,13 @@ const Clients = () => {
 
     try {
       const res = await axios.post(
-        "https://proprints.tranquility.org.ng/api/Client/CreateClient",
+        "https://proprints.tranquility.org.ng/api/Order/CreateOrder",
         clientData
       );
       notifySuccess(res.responseMessage);
       console.log(res);
       stopWaitingLoader();
-      setAddClientModal(false);
+      setCreateOrderModal(false);
       setTrigger(true);
     } catch (error) {
       console.error(error);
@@ -109,15 +109,15 @@ const Clients = () => {
     }
   };
 
-  const [clientsPerPage] = useState(10);
+  const [ordersPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const iLastClient = currentPage * clientsPerPage;
-  const iFirstClient = iLastClient - clientsPerPage;
-  const currentClient = clients.slice(iFirstClient, iLastClient);
+  const iLastOrder = currentPage * ordersPerPage;
+  const iFirstOrder = iLastOrder - ordersPerPage;
+  const currentOrder = orders.slice(iFirstOrder, iLastOrder);
 
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(clients.length / clientsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(orders.length / ordersPerPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -137,13 +137,13 @@ const Clients = () => {
         <div className="">
           {/* Header Section */}
           <div className="flex flex-col lg:flex-row justify-between lg:items-center mb-4">
-            <h2 className="text-2xl font-medium mb-4 text-start">Clients</h2>
+            <h2 className="text-2xl font-medium mb-4 text-start">Orders</h2>
 
             <div className="gap-8 flex flex-col sm:flex-row sm:items-center w-full sm:w-auto">
               <button
                 className="bg-gray-800 text-white hover:bg-gray-800/85 transition-all duration-300 px-4 py-2 rounded w-[150px] md:w-full"
-                onClick={() => setAddClientModal(true)}>
-                Add New Client
+                onClick={() => setCreateOrderModal(true)}>
+                Create Order
               </button>
 
               <div className="flex flex-col sm:flex-row gap-6 w-full">
@@ -191,66 +191,70 @@ const Clients = () => {
           </div>
         </div>
 
+        {/* Table Section */}
         <div className="overflow-x-auto p-1 pb-24">
-          <table className="min-w-full table-auto  rounded-lg shadow-md">
+          <table className="min-w-full table-auto rounded-lg shadow-md text-sm">
             <thead>
               <tr className="bg-gradient-to-r from-gray-800 to-gray-800/80 text-white rounded-t-lg">
                 <th className="px-4 py-4 text-left">S/N</th>
                 <th className="px-2 py-4 text-left">Client Name</th>
                 <th className="px-2 py-4 text-left">Business Name</th>
                 <th className="px-2 py-4 text-left">Business Address</th>
-                <th className="px-2 py-4 text-left">Email</th>
-                <th className="px-2 py-4 text-left">Phone</th>
-                {/* <th className="px-2 py-4 text-left">Orders</th> */}
-                {/* <th className="px-2 py-4 text-left">Payments</th> */}
+                <th className="px-2 py-4 text-left">Order Date</th>
+                <th className="px-2 py-4 text-left">Order Status</th>
+                <th className="px-2 py-4 text-left">Payment Status</th>
                 <th className="px-2 py-4 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
               {(() => {
-                // Decide which dataset to display: foundMembers or all clients
                 const filteredMembers = searchQuery
-                  ? findClientByName(clients, searchQuery) || []
-                  : currentClient;
+                  ? findClientByName(orders, searchQuery) || []
+                  : currentOrder;
 
                 return filteredMembers && filteredMembers.length > 0 ? (
-                  filteredMembers.map((client, index) => (
+                  filteredMembers.map((order, index) => (
                     <tr
                       key={index}
                       className={`${
                         index % 2 === 0 ? "bg-blue-50" : "bg-green-50"
-                      } hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 border-b text-sm text-gray-700 transition-colors`}>
+                      } hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 border-b transition-colors`}>
                       <td className="px-4 py-2">{index + 1}</td>
-                      <td className=" px-4 py-2">{client.clientName}</td>
-                      <td className="px-2 py-2">{client.businessName}</td>
-                      <td className="px-2 py-2">{client.businessAddress}</td>
-                      <td className="px-2 py-2">{client.email}</td>
-                      <td className="px-2 py-2 whitespace-wrap">
-                        {client.phone}
+                      <td className="px-4 py-2">{order.clientName}</td>
+                      <td className="px-2 py-2">{order.businessName}</td>
+                      <td className="px-2 py-2">{order.address}</td>
+                      <td className="px-2 py-2">
+                        {new Date(order.orderDate).toLocaleDateString()}
                       </td>
-                      {/* <td className="px-2 py-2">{client.orders === null ? 0 : client.orders}</td> */}
-                      {/* <td className="px-2 py-2">{client.payments === null ? 0 : client.payments}</td> */}
+                      <td className="px-2 py-2 whitespace-wrap">
+                        {order.orderStatus}
+                      </td>
+                      <td
+                        className={`px-2 py-2 ${
+                          order.paymentStatus === "Unpaid"
+                            ? "text-red-500 font-semibold"
+                            : "font-semibold"
+                        }`}>
+                        {order.paymentStatus}
+                      </td>
                       <td className="px-4 py-2">
                         <div className="relative">
                           <HiOutlineDotsHorizontal
                             className="text-[25px] text-gray-500 cursor-pointer transition-transform transform hover:scale-110"
-                            onClick={() => toggleEditMenu(client.clientId)}
+                            onClick={() => toggleEditMenu(order.orderId)}
                           />
-                          {clientId === client.clientId && openEditMenu ? (
+                          {orderId === order.orderId && openEditMenu ? (
                             <div
                               ref={menuRef}
                               className="shadow-lg px-2 py-4 rounded-lg border absolute right-8 top-4 bg-white text-[14px] text-left grid gap-4 w-[150px] z-50">
                               <p
                                 className="cursor-pointer hover:bg-blue-500 hover:text-white py-1 px-2 rounded transition-colors"
-                                onClick={() => handleView(client.clientId)}>
+                                onClick={() => handleView(order.orderId)}>
                                 View
                               </p>
                               <p className="cursor-pointer hover:bg-green-500 hover:text-white py-1 px-2 rounded transition-colors">
                                 Edit
                               </p>
-                              {/* <p className="cursor-pointer hover:bg-red-500 hover:text-white py-1 px-2 rounded transition-colors">
-                                Delete
-                              </p> */}
                             </div>
                           ) : null}
                         </div>
@@ -266,7 +270,7 @@ const Clients = () => {
                         {isLoading ? (
                           <SpinnerLoader />
                         ) : (
-                          "No clients found" || message
+                          "No Order found" || message
                         )}
                       </div>
                     </td>
@@ -278,23 +282,38 @@ const Clients = () => {
         </div>
       </div>
 
-      {addClientModal && (
+      {createOrderModal && (
         <div>
           <div className="fixed inset-0 z-30 flex items-center justify-center p-4 lg:overflow-y-auto lg:px-[10%] bg-black bg-opacity-50">
             <div className="bg-white lg:mt-40 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full relative">
               <IoMdCloseCircle
                 className="absolute top-4 right-4 text-3xl text-primary cursor-pointer"
-                onClick={() => setAddClientModal(false)}
+                onClick={() => setCreateOrderModal(false)}
               />
               <h2 className="text-lg font-bold text-gray-600 mb-4">
-                Add New Clients
+                Create New Order
               </h2>
+
               <form
                 action="submit"
                 onSubmit={addExistingMember}
                 className="w-[100%] space-y-4">
                 <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   <div className="">
+                    <input
+                      type="text"
+                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
+                      id="clientId"
+                      name="clientId"
+                      required
+                      placeholder="Client's Id"
+                      onChange={(e) =>
+                        setClientData({
+                          ...clientData,
+                          clientId: e.target.value,
+                        })
+                      }
+                    />
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
@@ -337,39 +356,23 @@ const Clients = () => {
                       onChange={(e) =>
                         setClientData({
                           ...clientData,
-                          businessAddress: e.target.value,
+                          address: e.target.value,
                         })
                       }
                     />
                   </div>
                   <div className="">
                     <input
-                      type="email"
+                      type="date"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="email"
-                      name="email"
+                      id="date"
+                      name="date"
                       required
-                      placeholder="Email Address"
+                      placeholder="Order Date"
                       onChange={(e) =>
                         setClientData({
                           ...clientData,
-                          email: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      type="text"
-                      className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                      id="PhoneNumber"
-                      name="PhoneNumber"
-                      required
-                      placeholder="Phone number"
-                      onChange={(e) =>
-                        setClientData({
-                          ...clientData,
-                          phone: e.target.value,
+                          orderDate: e.target.value,
                         })
                       }
                     />
@@ -379,7 +382,7 @@ const Clients = () => {
                 <button
                   type="submit"
                   className="px-4 py-2 bg-gray-800 rounded lg text-white">
-                  Add Client
+                  Create order
                 </button>
               </form>
             </div>
@@ -390,4 +393,4 @@ const Clients = () => {
   );
 };
 
-export default Clients;
+export default Orders;
