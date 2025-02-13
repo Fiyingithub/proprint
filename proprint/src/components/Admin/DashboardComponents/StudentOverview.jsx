@@ -56,7 +56,7 @@ const StudentOverview = () => {
             <table>
               <tbody>
                 <tr className="border-b">
-                  <td className="py-6 pr-32 border-r">
+                  <td className="py-6 pr-8 lg:pr-32 border-r">
                     {/* Earning Points */}
                     <div className="flex items-center gap-3">
                       <div className="bg-blue-500/20 p-2 rounded-lg">
@@ -70,7 +70,7 @@ const StudentOverview = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="py-6 pl-32">
+                  <td className="py-6 pl-8 lg:pl-32">
                     {/* Pending Courses */}
                     <div className="flex items-center gap-3">
                       <div className="bg-orange-500/20 p-2 rounded-lg">
@@ -86,7 +86,7 @@ const StudentOverview = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="py-6 pr-32 border-r">
+                  <td className="py-6 pr-8 lg:pr-32 border-r">
                     {/* Watch Time */}
                     <div className="flex items-center gap-3">
                       <div className="bg-pink-500/20 p-2 rounded-lg">
@@ -98,7 +98,7 @@ const StudentOverview = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="py-6 pl-32">
+                  <td className="py-6 pl-8 lg:pl-32">
                     {/* Certificates */}
                     <div className="flex items-center gap-3">
                       <div className="bg-cyan-500/20 p-2 rounded-lg">

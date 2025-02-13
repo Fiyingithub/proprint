@@ -37,7 +37,7 @@ const UpcomingClasses = () => {
   ];
 
   return (
-    <div className="bg-gray-50 p-6 rounded-xl">
+    <div className="bg-gray-50 lg:p-6 rounded-xl">
       <h2 className="text-2xl font-semibold mb-6">Upcomming Classes</h2>
       
       <div className="space-y-4">
