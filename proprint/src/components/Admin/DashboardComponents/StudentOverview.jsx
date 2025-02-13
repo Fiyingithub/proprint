@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { Clock, Calendar, Award, MessageCircle } from "lucide-react";
 import axios from "axios";
-import woman from "../../../assets/images/woman.png"
+import woman from "../../../assets/images/woman.png";
 
 const StudentOverview = () => {
   const adminId = JSON.parse(localStorage.getItem("adminId"));
