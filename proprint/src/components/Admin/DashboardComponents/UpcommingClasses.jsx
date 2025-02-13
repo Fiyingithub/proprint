@@ -2,7 +2,7 @@ import React from 'react';
 import { MdEdit, MdAccessTime, MdPeople } from 'react-icons/md';
 import { BsBox } from 'react-icons/bs';
 import { FaPencilAlt } from 'react-icons/fa';
-import woman from '../../../assets/images/woman.png'
+import woman from '../../../assets/images/woman.png';
 
 const UpcomingClasses = () => {
   // Dummy data for classes
