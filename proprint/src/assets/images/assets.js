@@ -1,5 +1,5 @@
 import banner from "./banner.jpg"
-import animation from './animation.gif'
+import animation from './Animation.gif'
 import woman from './woman.png'
 
 
