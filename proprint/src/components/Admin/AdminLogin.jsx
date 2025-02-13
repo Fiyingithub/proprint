@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import assets from "../../assets/images/assets";
+import banner from "../../assets/images/banner.jpg";
+import animation from "../../assets/images/Animation.gif";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { AdminLogin as handleAdminLogin } from "../../utilities/Api";
@@ -119,10 +120,10 @@ const AdminLogin = () => {
         <div
           className="hidden lg:flex w-1/2 items-center justify-center relative h-full bg-cover bg-no-repeat"
           style={{
-            backgroundImage: `url(${assets.banner})`,
+            backgroundImage: `url(${banner})`,
           }}>
           <img
-            src={assets.animation}
+            src={animation}
             className="w-36 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
             alt=""
           />

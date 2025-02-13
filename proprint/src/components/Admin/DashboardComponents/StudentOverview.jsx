@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { Clock, Calendar, Award, MessageCircle } from "lucide-react";
 import axios from "axios";
-import assets from "../../../assets/images/assets";
+import woman from "../../../assets/images/woman.png"
 
 const StudentOverview = () => {
   const adminId = JSON.parse(localStorage.getItem("adminId"));
@@ -41,7 +41,7 @@ const StudentOverview = () => {
           {/* Profile Section */}
           <div className="flex flex-col items-start gap-4">
             <img
-              src={assets.woman}
+              src={woman}
               alt="Profile"
               className="w-16 h-16 rounded-full bg-white"
             />

@@ -2,7 +2,7 @@ import React from 'react';
 import { MdEdit, MdAccessTime, MdPeople } from 'react-icons/md';
 import { BsBox } from 'react-icons/bs';
 import { FaPencilAlt } from 'react-icons/fa';
-import assets from '../../../assets/images/assets';
+import woman from '../../../assets/images/woman.png'
 
 const UpcomingClasses = () => {
   // Dummy data for classes
@@ -11,7 +11,7 @@ const UpcomingClasses = () => {
       id: 1,
       title: "UX Writing for Begainners",
       instructor: "Royal Parvej",
-      image: assets.woman,
+      image: woman,
       duration: "01:30m",
       students: 12,
       icon: <FaPencilAlt className="text-blue-500" />,
@@ -20,7 +20,7 @@ const UpcomingClasses = () => {
       id: 2,
       title: "How to Do Multitasking Esily",
       instructor: "Esther Howard",
-      image: assets.woman,
+      image: woman,
       duration: "02h 40m",
       students: 12,
       icon: <BsBox className="text-purple-500" />,
@@ -29,7 +29,7 @@ const UpcomingClasses = () => {
       id: 3,
       title: "UI Design Advance Course",
       instructor: "Guy Hawkins",
-      image: assets.woman,
+      image: woman,
       duration: "02h 20m",
       students: 12,
       icon: <MdEdit className="text-orange-500" />,
