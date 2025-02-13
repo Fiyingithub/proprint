@@ -12,7 +12,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         {/* Admin */}
-        <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route path="/" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/clients" element={<Clients />} />
         <Route path="/admin/orders" element={<Orders />} />
