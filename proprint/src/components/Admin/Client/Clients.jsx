@@ -157,7 +157,7 @@ const Clients = () => {
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    placeholder="Search order by client's name"
+                    placeholder="Search by client's name"
                     className="border border-gray-300 focus:border-primary outline-none rounded-md px-4 py-2 w-full sm:w-auto lg:w-[350px]"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
