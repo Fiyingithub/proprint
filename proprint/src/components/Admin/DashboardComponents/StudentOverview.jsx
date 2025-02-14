@@ -56,7 +56,7 @@ const StudentOverview = () => {
             <table>
               <tbody>
                 <tr className="border-b">
-                  <td className="py-6 pr-8 lg:pr-32 border-r">
+                  <td className="py-6 pr-8 lg:pr-28 border-r">
                     {/* Earning Points */}
                     <div className="flex items-center gap-3">
                       <div className="bg-blue-500/20 p-2 rounded-lg">
@@ -65,12 +65,12 @@ const StudentOverview = () => {
                       <div>
                         <div className="text-xl font-bold">126</div>
                         <div className="text-gray-400 text-sm">
-                          Earning Points
+                          Clients
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="py-6 pl-8 lg:pl-32">
+                  <td className="py-6 pl-8 lg:pl-28">
                     {/* Pending Courses */}
                     <div className="flex items-center gap-3">
                       <div className="bg-orange-500/20 p-2 rounded-lg">
@@ -79,26 +79,26 @@ const StudentOverview = () => {
                       <div>
                         <div className="text-xl font-bold">04</div>
                         <div className="text-gray-400 text-sm">
-                          Pending Courses
+                          Orders
                         </div>
                       </div>
                     </div>
                   </td>
                 </tr>
                 <tr>
-                  <td className="py-6 pr-8 lg:pr-32 border-r">
+                  <td className="py-6 pr-8 lg:pr-28 border-r">
                     {/* Watch Time */}
                     <div className="flex items-center gap-3">
                       <div className="bg-pink-500/20 p-2 rounded-lg">
                         <Clock className="w-6 h-6 text-pink-400" />
                       </div>
                       <div>
-                        <div className="text-xl font-bold">62h</div>
-                        <div className="text-gray-400 text-sm">Watch Time</div>
+                        <div className="text-xl font-bold">62</div>
+                        <div className="text-gray-400 text-sm">Work delivered</div>
                       </div>
                     </div>
                   </td>
-                  <td className="py-6 pl-8 lg:pl-32">
+                  <td className="py-6 pl-8 lg:pl-28">
                     {/* Certificates */}
                     <div className="flex items-center gap-3">
                       <div className="bg-cyan-500/20 p-2 rounded-lg">
@@ -107,7 +107,7 @@ const StudentOverview = () => {
                       <div>
                         <div className="text-xl font-bold">08</div>
                         <div className="text-gray-400 text-sm">
-                          Certificates
+                          Testimonies
                         </div>
                       </div>
                     </div>

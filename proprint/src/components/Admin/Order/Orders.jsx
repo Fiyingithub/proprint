@@ -85,34 +85,34 @@ const Orders = () => {
     return result || null;
   };
 
-  const [createOrderModal, setCreateOrderModal] = useState(false);
-  const [clientData, setClientData] = useState({
-    clientName: "",
-    businessName: "",
-    address: "",
-    orderDate: "",
-    clientId: "",
-  });
-  const addExistingMember = async (e) => {
-    e.preventDefault();
-    startWaitingLoader();
+  // const [createOrderModal, setCreateOrderModal] = useState(false);
+  // const [clientData, setClientData] = useState({
+  //   clientName: "",
+  //   businessName: "",
+  //   address: "",
+  //   orderDate: "",
+  //   clientId: "",
+  // });
+  // const addExistingMember = async (e) => {
+  //   e.preventDefault();
+  //   startWaitingLoader();
 
-    try {
-      const res = await axios.post(
-        "https://proprints.tranquility.org.ng/api/Order/CreateOrder",
-        clientData
-      );
-      notifySuccess(res.responseMessage);
-      console.log(res);
-      stopWaitingLoader();
-      setCreateOrderModal(false);
-      setTrigger(true);
-    } catch (error) {
-      console.error(error);
-      notifyError(error.response.data.responseMessage || "An error occurred");
-      stopWaitingLoader();
-    }
-  };
+  //   try {
+  //     const res = await axios.post(
+  //       "https://proprints.tranquility.org.ng/api/Order/CreateOrder",
+  //       clientData
+  //     );
+  //     notifySuccess(res.responseMessage);
+  //     console.log(res);
+  //     stopWaitingLoader();
+  //     setCreateOrderModal(false);
+  //     setTrigger(true);
+  //   } catch (error) {
+  //     console.error(error);
+  //     notifyError(error.response.data.responseMessage || "An error occurred");
+  //     stopWaitingLoader();
+  //   }
+  // };
 
   const [ordersPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -287,7 +287,7 @@ const Orders = () => {
         </div>
       </div>
 
-      {createOrderModal && (
+      {/* {createOrderModal && (
         <div>
           <div className="fixed inset-0 z-30 flex items-center justify-center p-4 lg:overflow-y-hidden lg:px-[8%] bg-gray-800/80">
             <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full lg:w-1/2 relative">
@@ -414,7 +414,7 @@ const Orders = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

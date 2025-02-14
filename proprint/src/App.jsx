@@ -6,6 +6,7 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import Clients from "./components/Admin/Client/Clients";
 import Orders from "./components/Admin/Order/Orders";
+import CreateOrder from "./components/Admin/Order/CreateOrder";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/clients" element={<Clients />} />
         <Route path="/admin/orders" element={<Orders />} />
+        <Route path="/admin/createOrder/:id" element={<CreateOrder />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

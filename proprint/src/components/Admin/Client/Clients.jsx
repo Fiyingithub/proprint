@@ -16,8 +16,6 @@ import { MdOutlineAddHome } from "react-icons/md";
 import { AiOutlineMail } from "react-icons/ai";
 import { MdOutlineLocalPhone } from "react-icons/md";
 
-
-
 const Clients = () => {
   const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } =
     useToast();
@@ -73,8 +71,9 @@ const Clients = () => {
     setClientId(item);
   };
 
-  const handleView = (id) => {
-    navigate(`/admin/client/${id}`, { state: id });
+  const handleCreateOrder = (id) => {
+    navigate(`/admin/createOrder/${id}`, { state: id });
+    console.log("ID", id);
   };
 
   const findClientByName = (clients, searchQuery) => {
@@ -95,7 +94,7 @@ const Clients = () => {
     email: "",
     phone: "",
   });
-  const addExistingMember = async (e) => {
+  const handeleAddClient = async (e) => {
     e.preventDefault();
     startWaitingLoader();
 
@@ -140,7 +139,7 @@ const Clients = () => {
         </div>
       </div>
 
-      <div className="container mb-10 mx-auto p-2">
+      <div className="container mb-10 mx-auto p-2 lg:p-0">
         <div className="">
           {/* Header Section */}
           <div className="flex flex-col lg:flex-row justify-between lg:items-center mb-4">
@@ -246,13 +245,15 @@ const Clients = () => {
                           {clientId === client.clientId && openEditMenu ? (
                             <div
                               ref={menuRef}
-                              className="shadow-lg px-2 py-4 rounded-lg border absolute right-8 top-4 bg-white text-[14px] text-left grid gap-4 w-[150px] z-50">
+                              className="shadow-lg px-2 py-2 rounded-lg border absolute right-8 top-4 bg-white text-[14px] text-left grid gap-4 w-[150px] z-50">
                               <p
-                                className="cursor-pointer hover:bg-blue-500 hover:text-white py-1 px-2 rounded transition-colors"
-                                onClick={() => handleView(client.clientId)}>
-                                View
+                                className="cursor-pointer hover:bg-blue-500 hover:text-white py-2 px-2 rounded transition-colors"
+                                onClick={() =>
+                                  handleCreateOrder(client.clientId)
+                                }>
+                                Create Order
                               </p>
-                              <p className="cursor-pointer hover:bg-green-500 hover:text-white py-1 px-2 rounded transition-colors">
+                              <p className="cursor-pointer hover:bg-green-500 hover:text-white py-2 px-2 rounded transition-colors">
                                 Edit
                               </p>
                               {/* <p className="cursor-pointer hover:bg-red-500 hover:text-white py-1 px-2 rounded transition-colors">
@@ -298,7 +299,7 @@ const Clients = () => {
               </h2>
               <form
                 action="submit"
-                onSubmit={addExistingMember}
+                onSubmit={handeleAddClient}
                 className="w-[100%] space-y-4">
                 <div className="grid gap-4 grid-cols-1 md:grid-cols-2 ">
                   <div className="flex flex-col gap-2">
