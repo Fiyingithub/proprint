@@ -10,6 +10,13 @@ import SpinnerLoader from "../../../context/Loaders/SpinnerLoader";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { FaRegUser } from "react-icons/fa";
+import { LuBriefcaseBusiness } from "react-icons/lu";
+import { MdOutlineAddHome } from "react-icons/md";
+import { AiOutlineMail } from "react-icons/ai";
+import { MdOutlineLocalPhone } from "react-icons/md";
+
+
 
 const Clients = () => {
   const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } =
@@ -280,8 +287,8 @@ const Clients = () => {
 
       {addClientModal && (
         <div>
-          <div className="fixed inset-0 z-30 flex items-center justify-center p-4 lg:overflow-y-auto lg:px-[10%] bg-black bg-opacity-50">
-            <div className="bg-white lg:mt-40 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full relative">
+          <div className="fixed inset-0 z-30 flex items-center justify-center p-4 lg:overflow-y-hidden lg:px-[8%] bg-gray-800/80">
+            <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full lg:w-1/2 relative">
               <IoMdCloseCircle
                 className="absolute top-4 right-4 text-3xl text-primary cursor-pointer"
                 onClick={() => setAddClientModal(false)}
@@ -293,8 +300,12 @@ const Clients = () => {
                 action="submit"
                 onSubmit={addExistingMember}
                 className="w-[100%] space-y-4">
-                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                  <div className="">
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 ">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1">
+                      <FaRegUser />
+                      <label htmlFor="clientName">Client's fullname</label>
+                    </div>
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
@@ -310,7 +321,11 @@ const Clients = () => {
                       }
                     />
                   </div>
-                  <div className="">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1">
+                      <LuBriefcaseBusiness />
+                      <label htmlFor="clientName">Business name</label>
+                    </div>
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
@@ -326,7 +341,11 @@ const Clients = () => {
                       }
                     />
                   </div>
-                  <div className="">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1">
+                      <MdOutlineAddHome />
+                      <label htmlFor="clientName">Business Address</label>
+                    </div>
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
@@ -342,7 +361,11 @@ const Clients = () => {
                       }
                     />
                   </div>
-                  <div className="">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1">
+                      <AiOutlineMail />
+                      <label htmlFor="clientName">Email Address</label>
+                    </div>
                     <input
                       type="email"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
@@ -358,7 +381,11 @@ const Clients = () => {
                       }
                     />
                   </div>
-                  <div className="">
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center gap-1">
+                      <MdOutlineLocalPhone />
+                      <label htmlFor="clientName">Phone number</label>
+                    </div>
                     <input
                       type="text"
                       className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"

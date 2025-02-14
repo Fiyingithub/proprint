@@ -1,15 +1,15 @@
-import React from 'react';
-import { MdEdit, MdAccessTime, MdPeople } from 'react-icons/md';
-import { BsBox } from 'react-icons/bs';
-import { FaPencilAlt } from 'react-icons/fa';
-import assets from '../../../assets/images/assets';
+import React from "react";
+import { MdEdit, MdAccessTime, MdPeople } from "react-icons/md";
+import { BsBox } from "react-icons/bs";
+import { FaPencilAlt } from "react-icons/fa";
+import assets from "../../../assets/images/assets";
 
 const UpcomingClasses = () => {
   // Dummy data for classes
   const classes = [
     {
       id: 1,
-      title: "UX Writing for Begainners",
+      title: "Cloth Printing",
       instructor: "Royal Parvej",
       image: assets.woman,
       duration: "01:30m",
@@ -18,7 +18,7 @@ const UpcomingClasses = () => {
     },
     {
       id: 2,
-      title: "How to Do Multitasking Esily",
+      title: "Cap Printing",
       instructor: "Esther Howard",
       image: assets.woman,
       duration: "02h 40m",
@@ -27,7 +27,7 @@ const UpcomingClasses = () => {
     },
     {
       id: 3,
-      title: "UI Design Advance Course",
+      title: "Banner Printing",
       instructor: "Guy Hawkins",
       image: assets.woman,
       duration: "02h 20m",
@@ -38,18 +38,15 @@ const UpcomingClasses = () => {
 
   return (
     <div className="bg-gray-50 lgp-6 rounded-xl">
-      <h2 className="text-2xl font-semibold mb-6">Upcomming Classes</h2>
-      
+      <h2 className="text-2xl font-semibold mb-6">Our Services</h2>
+
       <div className="space-y-4">
         {classes.map((classItem) => (
-          <div 
+          <div
             key={classItem.id}
-            className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm"
-          >
+            className="flex items-center gap-4 bg-white p-4 rounded-xl shadow-sm">
             {/* Icon Container */}
-            <div className="p-3 bg-gray-100 rounded-xl">
-              {classItem.icon}
-            </div>
+            <div className="p-3 bg-gray-100 rounded-xl">{classItem.icon}</div>
 
             {/* Class Info */}
             <div className="flex-1">
@@ -57,12 +54,14 @@ const UpcomingClasses = () => {
               <div className="flex items-center gap-4 mt-2">
                 {/* Instructor */}
                 <div className="flex items-center gap-1">
-                  <img 
+                  <img
                     src={classItem.image}
                     alt={classItem.instructor}
                     className="w-5 h-5 rounded-full"
                   />
-                  <span className="text-sm text-gray-600">{classItem.instructor}</span>
+                  <span className="text-sm text-gray-600">
+                    {classItem.instructor}
+                  </span>
                 </div>
 
                 {/* Duration */}

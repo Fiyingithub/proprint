@@ -28,7 +28,7 @@ const data = [
 const StudyStatisticsChart = () => {
   return (
     <div className="p-6 bg-white rounded-2xl shadow-md" style={{ height: "500px", width: "100%" }}>
-      <h2 className="text-xl font-semibold mb-4">Study Statistics</h2>
+      <h2 className="text-xl font-semibold mb-4">Revenue Statistics</h2>
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={data} layout="horizontal" margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barGap={20}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -36,9 +36,9 @@ const StudyStatisticsChart = () => {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="UX" fill="#4682B4" name="UX Design" stackId="study" barSize={15} radius={[10, 10, 10, 10]} />
-          <Bar dataKey="UI" fill="#8A2BE2" name="UI Design" stackId="study" barSize={15} radius={[10, 10, 10, 10]} />
-          <Bar dataKey="Dev" fill="#FF7F50" name="Development" stackId="study" barSize={15} radius={[10, 10, 10, 10]} />
+          <Bar dataKey="UX" fill="#4682B4" name="Product" stackId="study" barSize={15} radius={[10, 10, 10, 10]} />
+          <Bar dataKey="UI" fill="#8A2BE2" name="Services" stackId="study" barSize={15} radius={[10, 10, 10, 10]} />
+          <Bar dataKey="Dev" fill="#FF7F50" name="Earning" stackId="study" barSize={15} radius={[10, 10, 10, 10]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
