@@ -71,8 +71,8 @@ const Clients = () => {
     setClientId(item);
   };
 
-  const handleCreateOrder = (id) => {
-    navigate(`/admin/createOrder/${id}`, { state: id });
+  const handleCreateOrder = (clientId) => {
+    navigate(`/admin/client/${clientId}`, { state: clientId });
     console.log("ID", id);
   };
 
@@ -251,7 +251,7 @@ const Clients = () => {
                                 onClick={() =>
                                   handleCreateOrder(client.clientId)
                                 }>
-                                Create Order
+                                View
                               </p>
                               <p className="cursor-pointer hover:bg-green-500 hover:text-white py-2 px-2 rounded transition-colors">
                                 Edit
