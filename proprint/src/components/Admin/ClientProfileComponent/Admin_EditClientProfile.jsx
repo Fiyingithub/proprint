@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-// import SpinnerLoader from '../../../Loaders/SpinnerLoader';
 // import { useToast } from '../../../Loaders/ToastContext';
 // import WaitingLoader from '../../../Loaders/WaitingLoader';
-
+import { Link } from "react-router-dom";
 import avatar from "../../../assets/images/avatar.png";
 import { MdAddAPhoto } from "react-icons/md";
+import SpinnerLoader from "../../../context/Loaders/SpinnerLoader";
 
 const AdminEditMemberProfile = ({ clientId }) => {
   console.log(clientId);
@@ -104,14 +104,36 @@ const AdminEditMemberProfile = ({ clientId }) => {
       {userData === null ? (
         <div>
           {isLoading ? (
-            <div>Spinner</div>
+             <SpinnerLoader />
           ) : (
-            // <SpinnerLoader />
+           
             message
           )}
         </div>
       ) : (
         <div className="mx-0 md:mx-2 lg:mx-2 space-y-4">
+          <div>
+            <button className="px-8 py-2 bg-gray-800/80 rounded-md mt-4">
+              <Link to="/admin/clients">
+                <div className="flex items-center gap-1 text-sm text-white hover:text-gray-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-4 h-4">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"  
+                      d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                    />
+                  </svg>
+                  <span>Back</span>
+                </div>
+              </Link>
+            </button>
+          </div>
           <div className="w-full h-36 bg-white p-4 rounded-lg flex items-center gap-4 relative">
             <div className="w-28 h-28 rounded-full overflow-hidden flex items-center justify-center">
               <img
@@ -163,13 +185,8 @@ const AdminEditMemberProfile = ({ clientId }) => {
                       type="text"
                       id={field}
                       value={clientData[field]}
-                      className="mt-1 block w-full border rounded-md shadow-sm focus:border-primary outline-none focus:ring-primary focus:ring-1 p-2"
-                      onChange={(e) =>
-                        setClientData({
-                          ...clientData,
-                          [field]: e.target.value,
-                        })
-                      }
+                      readOnly
+                      className="mt-1 block w-full border border-black outline-none rounded-md p-2"
                     />
                   </div>
                 ))}

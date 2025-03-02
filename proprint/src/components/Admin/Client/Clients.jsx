@@ -103,7 +103,7 @@ const Clients = () => {
         "https://proprints.tranquility.org.ng/api/Client/CreateClient",
         clientData
       );
-      notifySuccess(res.responseMessage);
+      notifySuccess('Client Created Successfully');
       console.log(res);
       stopWaitingLoader();
       setAddClientModal(false);

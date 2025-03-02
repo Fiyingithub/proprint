@@ -3,15 +3,9 @@ import { useLocation } from "react-router-dom";
 // import { useToast } from "../../Loaders/ToastContext";
 
 import AdminEditMemberProfile from "../ClientProfileComponent/Admin_EditClientProfile";
-import NextOfKin from "../ClientProfileComponent/NextOfKin";
-import FundMemberWallet from "../ClientProfileComponent/FundMemberWallet";
-import LoanHistory from "../ClientProfileComponent/LoanHistory";
-import Security from "../ClientProfileComponent/Security";
+import ClientOrders from "../ClientProfileComponent/ClientOrders";
 
 import { FaRegEdit } from "react-icons/fa";
-import { GiHumanTarget } from "react-icons/gi";
-import { IoKey } from "react-icons/io5";
-import { FaWallet } from "react-icons/fa";
 import { GiTakeMyMoney } from "react-icons/gi";
 
 function ClientProfile() {
@@ -32,15 +26,10 @@ function ClientProfile() {
     {
       id: 2,
       label: "Orders",
-      value: <LoanHistory clientId={location.state} />,
+      value: <ClientOrders clientId={location.state} />,
       icon: <GiTakeMyMoney />,
     },
-    {
-      id: 3,
-      label: "Details",
-      value: <Security clientId={location.state} />,
-      icon: <IoKey />,
-    },
+    
   ];
 
   return (
