@@ -8,7 +8,7 @@ import { MdAddAPhoto } from "react-icons/md";
 import SpinnerLoader from "../../../context/Loaders/SpinnerLoader";
 
 const AdminEditMemberProfile = ({ clientId }) => {
-  console.log(clientId);
+  // console.log(clientId);
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
@@ -30,7 +30,7 @@ const AdminEditMemberProfile = ({ clientId }) => {
           `https://proprints.tranquility.org.ng/api/Client/GetClientById/${clientId}`
         );
 
-        console.log(response.data.data);
+        // console.log(response.data.data);
 
         if (response.data.data) {
           setUserData(response.data.data);
@@ -167,7 +167,7 @@ const AdminEditMemberProfile = ({ clientId }) => {
 
           <div className="p-6 bg-white shadow-lg rounded-lg">
             <h2 className="text-xl font-semibold text-gray-800 mb-6">
-              Member Profile
+              Client Profile
             </h2>
 
             <form className="space-y-6 mb-8">

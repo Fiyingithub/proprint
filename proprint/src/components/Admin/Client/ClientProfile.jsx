@@ -10,7 +10,7 @@ import { GiTakeMyMoney } from "react-icons/gi";
 
 function ClientProfile() {
   const location = useLocation();
-  console.log(location.state);
+  // console.log(location.state);
   useEffect(() => {
     window.scrollTo(0, 0);
   });

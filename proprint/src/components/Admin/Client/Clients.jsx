@@ -21,7 +21,7 @@ const Clients = () => {
     useToast();
   const navigate = useNavigate();
   const menuRef = useRef(null);
-  console.log("MENUREF", menuRef);
+  // console.log("MENUREF", menuRef);
   const handleClickOutside = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
       setOpenEditMenu(false);
@@ -48,7 +48,7 @@ const Clients = () => {
           "https://proprints.tranquility.org.ng/api/Client/GetAllClients"
         );
         setClients(response.data.$values);
-        console.log(response.data.$values);
+        // console.log(response.data.$values);
         setIsLoading(false);
       } catch (error) {
         console.error(error);
@@ -73,8 +73,9 @@ const Clients = () => {
 
   const handleCreateOrder = (clientId) => {
     navigate(`/admin/client/${clientId}`, { state: clientId });
-    console.log("ID", id);
+    // console.log("ID", id);
   };
+
 
   const findClientByName = (clients, searchQuery) => {
     if (!searchQuery) return;
@@ -104,7 +105,7 @@ const Clients = () => {
         clientData
       );
       notifySuccess('Client Created Successfully');
-      console.log(res);
+      // console.log(res);
       stopWaitingLoader();
       setAddClientModal(false);
       setTrigger(true);
@@ -251,11 +252,11 @@ const Clients = () => {
                                 onClick={() =>
                                   handleCreateOrder(client.clientId)
                                 }>
-                                View
+                                View Details
                               </p>
-                              <p className="cursor-pointer hover:bg-green-500 hover:text-white py-2 px-2 rounded transition-colors">
+                              {/* <p className="cursor-pointer hover:bg-green-500 hover:text-white py-2 px-2 rounded transition-colors">
                                 Edit
-                              </p>
+                              </p> */}
                               {/* <p className="cursor-pointer hover:bg-red-500 hover:text-white py-1 px-2 rounded transition-colors">
                                 Delete
                               </p> */}
