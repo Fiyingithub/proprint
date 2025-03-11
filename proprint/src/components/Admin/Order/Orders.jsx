@@ -40,7 +40,7 @@ const OrderItemsModal = ({ orderId, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:overflow-y-hidden lg:px-[8%] bg-gray-700/60">
-      <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full lg:w-1/2 relative">
+      <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg min-h-96 w-full lg:w-1/2 relative">
         <IoMdCloseCircle
           className="absolute top-4 right-4 text-3xl text-primary cursor-pointer"
           onClick={onClose}

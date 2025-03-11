@@ -10,8 +10,8 @@ const NavbarDashboard = () => {
     { name: "Inventory", navigationLink: "#" },
     { name: "Product", navigationLink: "#" },
     { name: "Orders", navigationLink: "/admin/orders" },
-    { name: "Staffs", navigationLink: "#" },
-    { name: "Payments", navigationLink: "#" },
+    { name: "Staffs", navigationLink: "/admin/staff" },
+    { name: "Payments", navigationLink: "/admin/payments" },
   ];
 
   return (

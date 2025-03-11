@@ -7,6 +7,9 @@ import ClientOrders from "../ClientProfileComponent/ClientOrders";
 
 import { FaRegEdit } from "react-icons/fa";
 import { GiTakeMyMoney } from "react-icons/gi";
+import { MdPayment } from "react-icons/md";
+import Payment from "../ClientProfileComponent/Payment";
+
 
 function ClientProfile() {
   const location = useLocation();
@@ -28,6 +31,13 @@ function ClientProfile() {
       label: "Orders",
       value: <ClientOrders clientId={location.state} />,
       icon: <GiTakeMyMoney />,
+    },
+    
+    {
+      id: 3,
+      label: "Payment",
+      value: <Payment clientId={location.state} />,
+      icon: <MdPayment />,
     },
     
   ];

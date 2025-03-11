@@ -6,14 +6,29 @@ import assets from "../../../assets/images/assets";
 const StudentOverview = () => {
   const adminId = JSON.parse(localStorage.getItem("adminId"));
   const [user, setUser] = useState({});
+  const [totalClients, setTotalClients] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0)
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await axios.get(
-          `https://proprints.tranquility.org.ng/api/Admin/GetAdminById/${adminId}`
-        );
+        const [response, getClientTotatlRes, getOrderTotatlRes] = await Promise.all([
+          axios.get(
+            `https://proprints.tranquility.org.ng/api/Admin/GetAdminById/${adminId}`
+          ),
+          axios.get(
+            `https://proprints.tranquility.org.ng/api/Client/GetAllClients`
+          ),
+          axios.get(
+            `https://proprints.tranquility.org.ng/api/Order/GetAllOrders`
+          ),
+        ])
         setUser(response.data.data);
+
+        setTotalClients(getClientTotatlRes.data.$values.length);
+
+        setTotalOrders(getOrderTotatlRes.data.$values.length);
+
       } catch (error) {
         console.log(error);
       }
@@ -63,7 +78,7 @@ const StudentOverview = () => {
                         <MessageCircle className="w-6 h-6 text-blue-400" />
                       </div>
                       <div>
-                        <div className="text-xl font-bold">126</div>
+                        <div className="text-xl font-bold">{totalClients}</div>
                         <div className="text-gray-400 text-sm">
                           Clients
                         </div>
@@ -77,7 +92,7 @@ const StudentOverview = () => {
                         <Calendar className="w-6 h-6 text-orange-400" />
                       </div>
                       <div>
-                        <div className="text-xl font-bold">04</div>
+                        <div className="text-xl font-bold">{totalOrders}</div>
                         <div className="text-gray-400 text-sm">
                           Orders
                         </div>

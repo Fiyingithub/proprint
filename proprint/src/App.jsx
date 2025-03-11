@@ -7,6 +7,8 @@ import NotFound from "./pages/NotFound";
 import Clients from "./components/Admin/Client/Clients";
 import Orders from "./components/Admin/Order/Orders";
 import ClientProfile from "./components/Admin/Client/ClientProfile";
+import AdminPayment from "./components/Admin/Payment/AdminPayment";
+import Staff from "./components/Admin/Staff/Staff";
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
         <Route path="/admin/clients" element={<Clients />} />
         <Route path="/admin/orders" element={<Orders />} />
         <Route path="/admin/client/:id" element={<ClientProfile />} />
+        <Route path="/admin/payments" element={<AdminPayment />} />
+        <Route path="/admin/staff" element={<Staff />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
