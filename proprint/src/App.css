@@ -1,0 +1,19 @@
+@media print {
+    body * {
+      visibility: hidden;
+    }
+    .receipt-modal, .receipt-modal * {
+      visibility: visible;
+    }
+    .receipt-modal {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+
+    .no-print {
+        display: none !important;
+      }
+      
+  }

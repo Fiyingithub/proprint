@@ -30,8 +30,7 @@ const ClientOrders = ({ clientId }) => {
     orderId: orderId,
     clientId: clientId,
   });
-
-
+  const [clientDetails, setClientDetails] = useState(null);
 
   const { notifySuccess, notifyError, startWaitingLoader, stopWaitingLoader } =
     useToast();
@@ -59,6 +58,41 @@ const ClientOrders = ({ clientId }) => {
     if (clientId) fetchClient();
   }, [clientId, trigger]);
 
+  useEffect(() => {
+    const fetchClientDetails = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `https://proprints.tranquility.org.ng/api/Client/GetClientById/${clientId}`
+        );
+        console.log("RESPONSE", response.data?.data);
+        if (response.data.data) {
+          setClientDetails(response.data.data);
+
+          // Update clientData with fetched client details
+          setClientData((prev) => ({
+            ...prev,
+            clientName: response.data.data.clientName,
+            businessName: response.data.data.businessName,
+            address: response.data.data.businessAddress,
+          }));
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          setMessage(error.response.data.responseMessage);
+        } else {
+          setMessage(`${error.message}, check your internet connection`);
+        }
+        setIsLoading(false);
+      }
+    };
+    if (clientId) {
+      fetchClientDetails();
+    }
+  }, [clientId]);
+
   const [clientData, setClientData] = useState({
     clientName: "",
     businessName: "",
@@ -67,7 +101,10 @@ const ClientOrders = ({ clientId }) => {
     clientId: clientId,
   });
 
+  console.log("CLIENT DATA OUT", clientData);
+
   const addExistingMember = async (e) => {
+    console.log("CLIENT DATA IN", clientData);
     e.preventDefault();
     startWaitingLoader();
 
@@ -95,6 +132,7 @@ const ClientOrders = ({ clientId }) => {
     itemName: "",
     description: "",
     unit: "",
+    discount: "",
     price: "",
     orderId: orderId,
   });
@@ -110,7 +148,6 @@ const ClientOrders = ({ clientId }) => {
   const addOrderItemHandler = async (e) => {
     e.preventDefault();
     startWaitingLoader();
-
 
     try {
       const res = await axios.post(
@@ -143,7 +180,7 @@ const ClientOrders = ({ clientId }) => {
         paymentData
       );
 
-      console.log("PAYMENT RES",res)
+      console.log("PAYMENT RES", res);
       if (res) {
         notifySuccess("Payment Successful");
         setPaymentModal(false);
@@ -164,7 +201,7 @@ const ClientOrders = ({ clientId }) => {
       orderId: orderId,
       amount: totalPrice, // Set amount to the total price of the order
     }));
-    setViewOrderModal(false)
+    setViewOrderModal(false);
     setPaymentModal(true);
   };
 
@@ -222,7 +259,13 @@ const ClientOrders = ({ clientId }) => {
   };
 
   const totalPrice = viewItems.reduce(
-    (total, item) => total + (item.price || 0),
+    (total, item) =>
+      total + (item.price || 0) * (item.unit || 0) - (item.discount || 0),
+    0
+  );
+
+  const discountPrice = viewItems.reduce(
+    (total, item) => total + (item.discount || 0),
     0
   );
 
@@ -384,11 +427,13 @@ const ClientOrders = ({ clientId }) => {
                   </div>
                   <input
                     type="text"
-                    className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
+                    className={`border border-gray-300 rounded-md p-2 ${clientDetails ? "text-gray-500" : ""} focus:border-primary outline-none w-full`}
                     id="clientName"
                     name="clientName"
+                    readOnly={clientDetails ? true : false}
                     required
                     placeholder="Client's fullname"
+                    value={clientData.clientName || ""}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -404,11 +449,13 @@ const ClientOrders = ({ clientId }) => {
                   </div>
                   <input
                     type="text"
-                    className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
+                    className={`border border-gray-300 rounded-md p-2 ${clientDetails ? "text-gray-500" : ""} focus:border-primary outline-none w-full`}
                     id="Business Name"
                     name="Business Name"
+                    readOnly={clientDetails ? true : false}
                     required
                     placeholder="Business name"
+                    value={clientData.businessName || ""}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -424,11 +471,13 @@ const ClientOrders = ({ clientId }) => {
                   </div>
                   <input
                     type="text"
-                    className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
+                    className={`border border-gray-300 rounded-md p-2 ${clientDetails ? "text-gray-500" : ""} focus:border-primary outline-none w-full`}
                     id="businessAddress"
                     name="businessAddress"
+                    readOnly={clientDetails ? true : false}
                     required
                     placeholder="Business address"
+                    value={clientData.address || ""}
                     onChange={(e) =>
                       setClientData({
                         ...clientData,
@@ -596,6 +645,25 @@ const ClientOrders = ({ clientId }) => {
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center gap-1">
                                     <BsCalendar2Date />
+                                    <label htmlFor="price">Discount</label>
+                                  </div>
+                                  <input
+                                    type="text"
+                                    className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
+                                    id="discount"
+                                    name="discount"
+                                    required
+                                    onChange={(e) =>
+                                      setOrderItems({
+                                        ...orderItems,
+                                        discount: e.target.value,
+                                      })
+                                    }
+                                  />
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                  <div className="flex items-center gap-1">
+                                    <BsCalendar2Date />
                                     <label htmlFor="price">Price</label>
                                   </div>
                                   <input
@@ -638,7 +706,7 @@ const ClientOrders = ({ clientId }) => {
                       {/* View Order Items Modal */}
                       {viewOrderModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:overflow-y-hidden lg:px-[8%] bg-gray-700/15">
-                          <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full lg:w-1/2 min-h-96 relative">
+                          <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full lg:w-[60%] min-h-96 relative">
                             <IoMdCloseCircle
                               className="absolute top-4 right-4 text-3xl text-primary cursor-pointer"
                               onClick={() => setViewOrderModal(false)}
@@ -661,11 +729,17 @@ const ClientOrders = ({ clientId }) => {
                                     <th className="px-4 py-2 text-left">
                                       Description
                                     </th>
+
                                     <th className="px-4 py-2 text-left">
-                                      Unit
+                                      Price {"(per Item)"}
                                     </th>
+
                                     <th className="px-4 py-2 text-left">
-                                      Price
+                                      Unit{"(pieces)"}
+                                    </th>
+
+                                    <th className="px-4 py-2 text-left">
+                                      Total Amount
                                     </th>
                                   </tr>
                                 </thead>
@@ -686,13 +760,25 @@ const ClientOrders = ({ clientId }) => {
                                         <td className="px-4 py-2">
                                           {item.description}
                                         </td>
+
                                         <td className="px-4 py-2">
-                                          {item.unit}
-                                        </td>
-                                        <td className="px-4 py-2">
+                                          ₦{" "}
                                           {item.price
                                             ? formatPrice(item.price)
                                             : 0}
+                                        </td>
+
+                                        <td className="px-4 py-2">
+                                          {item.unit}
+                                        </td>
+
+                                        <td className="px-4 py-2">
+                                          ₦{" "}
+                                          {item.price && item.unit
+                                            ? formatPrice(
+                                                item.price * item.unit
+                                              )
+                                            : "₦ 0.00"}
                                         </td>
                                       </tr>
                                     ))
@@ -711,15 +797,32 @@ const ClientOrders = ({ clientId }) => {
                             </div>
 
                             <div className="flex justify-end gap-4 items-center my-6">
-                              <h1 className="text-md ">Total Amount {"="}</h1>
-                              <p className="text-md font-semibold">
-                                ₦ {totalPrice ? formatPrice(totalPrice) : 0.0}
-                              </p>
+                              <div className="w-1/3 flex justify-between">
+                                <h1 className="text-md text-left">Discount</h1>
+                                <p className="text-md text-right font-semibold">
+                                  ₦ -{" "}
+                                  {discountPrice !== null
+                                    ? formatPrice(discountPrice)
+                                    : 0.0}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex justify-end gap-4 items-center my-6">
+                              <div className="w-1/3 flex justify-between">
+                                <h1 className="text-md text-left">
+                                  Total Amount {"="}
+                                </h1>
+                                <p className="text-md text-right font-semibold">
+                                  ₦ {totalPrice ? formatPrice(totalPrice) : 0.0}
+                                </p>
+                              </div>
                             </div>
                             <div className="flex justify-end">
                               <button
                                 className="px-4 py-2 cursor-pointer bg-gray-800 rounded-lg mt-4 text-white"
-                                onClick={() => handlePaymentModal(order.orderId)} // Open payment modal
+                                onClick={() =>
+                                  handlePaymentModal(order.orderId)
+                                } // Open payment modal
                               >
                                 Make Payment
                               </button>

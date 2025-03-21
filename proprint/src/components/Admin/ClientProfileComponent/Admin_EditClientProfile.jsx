@@ -201,12 +201,4 @@ const AdminEditMemberProfile = ({ clientId }) => {
 
 export default AdminEditMemberProfile;
 
-// import React from 'react'
 
-// const Admin_EditClientProfile = () => {
-//   return (
-//     <div>Admin_EditClientProfile</div>
-//   )
-// }
-
-// export default Admin_EditClientProfile

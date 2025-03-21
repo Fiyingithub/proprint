@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import SpinnerLoader from "../../../context/Loaders/SpinnerLoader";
+import Receipt from "./Receipt";
 
 const Payment = ({ clientId }) => {
   const [payments, setPayments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [receiptModal, setReceiptModal] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
+  const [orderDetails, setOrderDetails] = useState(null); // State to store order details
 
-
-  const formatAmount = (amt) => (amt ? amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0");
+  const formatAmount = (amt) =>
+    amt ? amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : "0";
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -22,7 +26,11 @@ const Payment = ({ clientId }) => {
         console.log("RESPONSE", response.data?.data);
 
         // Extract payments from the response
-        const paymentData = Array.isArray(response.data.data?.payments.payments?.$values) ? response.data.data.payments.payments.$values: [];
+        const paymentData = Array.isArray(
+          response.data.data?.payments.payments?.$values
+        )
+          ? response.data.data.payments.payments.$values
+          : [];
         setPayments(paymentData);
         setIsLoading(false);
       } catch (error) {
@@ -34,7 +42,44 @@ const Payment = ({ clientId }) => {
     };
     if (clientId) fetchClient();
   }, [clientId]);
-  
+
+  const fetchOrderDetails = async (orderId) => {
+    try {
+      const response = await axios.get(
+        `https://proprints.tranquility.org.ng/api/Order/GetOrderItems/${orderId}`
+      );
+      const orderItems = Array.isArray(
+        response.data.data?.order?.orderItems?.$values
+      )
+        ? response.data.data.order.orderItems.$values
+        : [];
+      const totalAmount = orderItems.reduce(
+        (total, item) => total + (item.price || 0),
+        0
+      );
+      setOrderDetails({ orderItems, totalAmount });
+    } catch (error) {
+      console.error("Error fetching order details:", error);
+      setOrderDetails(null);
+    }
+  };
+
+  const handleReceiptModal = async (payment) => {
+    console.log(payment)
+    setSelectedPayment(payment);
+    await fetchOrderDetails(payment.orderId); // Fetch order details for the selected payment
+    setReceiptModal(true);
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const closeModal = () => {
+    setSelectedPayment(null);
+    setOrderDetails(null);
+    setReceiptModal(false);
+  };
 
   return (
     <div className="w-full">
@@ -87,14 +132,19 @@ const Payment = ({ clientId }) => {
                     } hover:bg-gradient-to-r hover:from-blue-100 hover:to-purple-100 border-b transition-colors`}
                   >
                     <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">₦ {payment.amount ? formatAmount(payment.amount) : 0}</td>
+                    <td className="px-4 py-2">
+                      ₦ {payment.amount ? formatAmount(payment.amount) : 0}
+                    </td>
                     <td className="px-2 py-2">
                       {new Date(payment.paymentDate).toLocaleDateString()}
                     </td>
                     <td className="px-2 py-2">{payment.paymentMode}</td>
                     <td className="px-2 py-2">{payment.paymentDescription}</td>
                     <td className="px-2 py-2">
-                      <button className="text-blue-500 hover:text-blue-700">
+                      <button
+                        className="text-blue-500 hover:text-blue-700"
+                        onClick={() => handleReceiptModal(payment)}
+                      >
                         View
                       </button>
                     </td>
@@ -118,6 +168,15 @@ const Payment = ({ clientId }) => {
               )}
             </tbody>
           </table>
+
+          {receiptModal && (
+            <Receipt
+            payment={selectedPayment}
+            orderDetails={orderDetails}
+            closeModal={closeModal}
+            handlePrint={handlePrint}
+          />
+          )}
         </div>
       </div>
     </div>
