@@ -23,8 +23,6 @@ const Payment = ({ clientId }) => {
           `https://proprints.tranquility.org.ng/api/Payment/GetPaymentByClientId/${clientId}`
         );
 
-        console.log("RESPONSE", response.data?.data);
-
         // Extract payments from the response
         const paymentData = Array.isArray(
           response.data.data?.payments.payments?.$values
@@ -43,11 +41,22 @@ const Payment = ({ clientId }) => {
     if (clientId) fetchClient();
   }, [clientId]);
 
+  const handleReceiptModal = async (payment) => {
+    setSelectedPayment(payment);
+    if (payment.orderId) {
+      await fetchOrderDetails(payment.orderId); // Fetch order details for the selected payment
+    } else {
+      console.error("Order ID is null or undefined");
+    }
+    setReceiptModal(true);
+  };
+  
   const fetchOrderDetails = async (orderId) => {
     try {
       const response = await axios.get(
         `https://proprints.tranquility.org.ng/api/Order/GetOrderItems/${orderId}`
       );
+
       const orderItems = Array.isArray(
         response.data.data?.order?.orderItems?.$values
       )
@@ -60,15 +69,7 @@ const Payment = ({ clientId }) => {
       setOrderDetails({ orderItems, totalAmount });
     } catch (error) {
       console.error("Error fetching order details:", error);
-      setOrderDetails(null);
     }
-  };
-
-  const handleReceiptModal = async (payment) => {
-    console.log(payment)
-    setSelectedPayment(payment);
-    await fetchOrderDetails(payment.orderId); // Fetch order details for the selected payment
-    setReceiptModal(true);
   };
 
   const handlePrint = () => {

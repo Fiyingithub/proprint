@@ -65,7 +65,6 @@ const ClientOrders = ({ clientId }) => {
         const response = await axios.get(
           `https://proprints.tranquility.org.ng/api/Client/GetClientById/${clientId}`
         );
-        console.log("RESPONSE", response.data?.data);
         if (response.data.data) {
           setClientDetails(response.data.data);
 
@@ -101,10 +100,8 @@ const ClientOrders = ({ clientId }) => {
     clientId: clientId,
   });
 
-  console.log("CLIENT DATA OUT", clientData);
 
   const addExistingMember = async (e) => {
-    console.log("CLIENT DATA IN", clientData);
     e.preventDefault();
     startWaitingLoader();
 
@@ -268,6 +265,12 @@ const ClientOrders = ({ clientId }) => {
     (total, item) => total + (item.discount || 0),
     0
   );
+
+  const icons = {
+    discountIcon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-circle-percent"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="M9 9h.01"/><path d="M15 15h.01"/></svg>
+    )
+  }
 
   return (
     <div className="w-full">
@@ -565,7 +568,7 @@ const ClientOrders = ({ clientId }) => {
                       </div>
 
                       {addOrderItem && (
-                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:overflow-y-hidden lg:px-[8%] bg-gray-700/60">
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 lg:overflow-y-hidden lg:px-[8%] bg-gray-700/15">
                           <div className="bg-white lg:mt-10 lg:mb-10 p-4 lg:p-10 rounded-lg shadow-lg w-full lg:w-1/2 relative">
                             <IoMdCloseCircle
                               className="absolute top-4 right-4 text-3xl text-primary cursor-pointer"
@@ -582,7 +585,7 @@ const ClientOrders = ({ clientId }) => {
                               <div className="grid gap-4 grid-cols-1 md:grid-cols-2 ">
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center gap-1">
-                                    <FaRegUser />
+                                    <FaRegUser className="w-6 h-6" />
                                     <label htmlFor="itemName">Item name</label>
                                   </div>
                                   <input
@@ -602,29 +605,35 @@ const ClientOrders = ({ clientId }) => {
                                 </div>
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center gap-1">
-                                    <LuBriefcaseBusiness />
+                                    <LuBriefcaseBusiness className="w-6 h-6" />
                                     <label htmlFor="description">
                                       Description
                                     </label>
                                   </div>
-                                  <input
+                                  {/* <input
                                     type="text"
-                                    className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
-                                    id="description"
-                                    name="description"
-                                    required
-                                    placeholder="description"
-                                    onChange={(e) =>
-                                      setOrderItems({
-                                        ...orderItems,
-                                        description: e.target.value,
-                                      })
-                                    }
-                                  />
+                                    
+                                  /> */}
+                                  <select
+                                  className="border border-gray-300 rounded-md p-2 focus:border-primary outline-none w-full"
+                                  id="description"
+                                  name="description"
+                                  required
+                                  placeholder="description"
+                                  onChange={(e) =>
+                                    setOrderItems({
+                                      ...orderItems,
+                                      description: e.target.value,
+                                    })
+                                  }
+                                  >
+                                    <option value="description">Full payment</option>
+                                    <option value="description">Half Payment</option>
+                                  </select>
                                 </div>
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center gap-1">
-                                    <MdOutlineAddHome />
+                                    <MdOutlineAddHome  className="w-6 h-6"/>
                                     <label htmlFor="unit">Unit</label>
                                   </div>
                                   <input
@@ -644,7 +653,7 @@ const ClientOrders = ({ clientId }) => {
                                 </div>
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center gap-1">
-                                    <BsCalendar2Date />
+                                    <p className="w-6 h-6">{icons.discountIcon}</p>
                                     <label htmlFor="price">Discount</label>
                                   </div>
                                   <input
@@ -663,7 +672,7 @@ const ClientOrders = ({ clientId }) => {
                                 </div>
                                 <div className="flex flex-col gap-2">
                                   <div className="flex items-center gap-1">
-                                    <BsCalendar2Date />
+                                    <BsCalendar2Date className="w-6 h-6"/>
                                     <label htmlFor="price">Price</label>
                                   </div>
                                   <input
